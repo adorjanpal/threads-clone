@@ -74,7 +74,7 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
 
   const skipAmount = (pageNumber - 1) * pageSize;
 
-  const postsQuery = Thread.find({ $in: [null, undefined] })
+  const postsQuery = Thread.find({ parentId: { $in: [null, undefined] } })
     .sort({ createdAt: "desc" })
     .limit(pageSize)
     .populate({
@@ -91,7 +91,7 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
     });
 
   const totalPostsCount = await Thread.countDocuments({
-    $in: [null, undefined],
+    parentId: { $in: [null, undefined] },
   });
 
   const posts = await postsQuery.exec();
