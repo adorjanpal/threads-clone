@@ -135,7 +135,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
                     width={24}
                     height={24}
                     priority
-                    className="object-contain"
+                    className="rounded-full object-contain"
                   />
                 )}
               </FormLabel>
