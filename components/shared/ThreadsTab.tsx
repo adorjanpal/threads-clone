@@ -31,7 +31,7 @@ const ThreadsTab = async ({ currentUserId, accountId, accountType }: Props) => {
             <ThreadCard
               key={thread.id}
               id={thread._id}
-              currentUserId={thread?.id || ""}
+              currentUserId={result.id || ""}
               parentId={thread.parentId}
               content={thread.text}
               author={
@@ -46,6 +46,8 @@ const ThreadsTab = async ({ currentUserId, accountId, accountType }: Props) => {
               community={thread.community}
               createdAt={thread.createdAt}
               comments={thread.children}
+              likedByUser={thread.liked.length > 0 ? true : false}
+              numberOfLikes={thread.liked.length}
             />
             {accountId === currentUserId && (
               <DeleteThread threadId={thread._id} />

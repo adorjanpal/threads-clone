@@ -243,12 +243,31 @@ export async function addCommentToThread(
   }
 }
 
-export async function likeThread(
+export async function toggleLike(
   threadId: string,
   userId: string,
+  likedByUser: boolean,
   path: string
 ) {
   try {
     connectToDB();
-  } catch (error: any) {}
+
+    const thread = await Thread.findById(threadId);
+    const user = await User.findOne({ id: userId });
+
+    if (thread.liked.includes(user._id)) {
+      thread.liked.remove(user._id);
+      user.likes.remove(thread._id);
+    } else {
+      thread.liked.push(user._id);
+      user.likes.push(thread._id);
+    }
+
+    await user.save();
+    await thread.save();
+
+    revalidatePath(path);
+  } catch (error: any) {
+    throw new Error(`Error liking post ${error.message}`);
+  }
 }

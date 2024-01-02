@@ -1,6 +1,7 @@
 import ThreadCard from "@/components/cards/ThreadCard";
 import Comment from "@/components/forms/Comment";
 import DeleteThread from "@/components/forms/DeleteThread";
+import LikeThread from "@/components/forms/LikeThread";
 import { fetchThreadById } from "@/lib/actions/thread.actions";
 import { fetchUser } from "@/lib/actions/user.actions";
 import { currentUser } from "@clerk/nextjs";
@@ -32,6 +33,8 @@ const Page = async ({ params }: { params: { id: string } }) => {
           community={thread.community}
           createdAt={thread.createdAt}
           comments={thread.children}
+          likedByUser={thread.liked.length > 0 ? true : false}
+          numberOfLikes={thread.liked.length}
         />
       </div>
 
@@ -50,7 +53,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
               <ThreadCard
                 key={childItem._id}
                 id={childItem._id}
-                currentUserId={childItem?.id || " "}
+                currentUserId={user.id || " "}
                 parentId={childItem.parentId}
                 content={childItem.text}
                 author={childItem.author}
@@ -58,7 +61,10 @@ const Page = async ({ params }: { params: { id: string } }) => {
                 createdAt={childItem.createdAt}
                 comments={childItem.children}
                 isComment
+                likedByUser={childItem.liked.length > 0 ? true : false}
+                numberOfLikes={childItem.liked.length}
               />
+
               <DeleteThread threadId={childItem._id} />
             </div>
           );

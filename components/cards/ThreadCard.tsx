@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 import DeleteThread from "../forms/DeleteThread";
+import LikeThread from "../forms/LikeThread";
 
 interface Props {
   id: string;
@@ -28,6 +29,8 @@ interface Props {
     };
   }[];
   isComment?: boolean;
+  likedByUser: boolean;
+  numberOfLikes: number;
 }
 
 const ThreadCard = ({
@@ -40,6 +43,8 @@ const ThreadCard = ({
   createdAt,
   comments,
   isComment,
+  likedByUser,
+  numberOfLikes,
 }: Props) => {
   return (
     <article
@@ -73,13 +78,16 @@ const ThreadCard = ({
 
             <div className={`${isComment && "mb-10"}mt-5 flex flex-col gap-3`}>
               <div className="flex gap-3.5">
-                <Image
-                  src="/assets/heart-gray.svg"
-                  alt="heart"
-                  width={24}
-                  height={24}
-                  className="cursor-pointer object-contain"
-                />
+                <div className="flex gap-1 justify-center mt-0.5">
+                  <p className="text-light-2 text-small-regular m-0 mt-0.5">
+                    {numberOfLikes}
+                  </p>
+                  <LikeThread
+                    userId={currentUserId}
+                    likedByUser={likedByUser}
+                    threadId={id}
+                  />
+                </div>
                 <Link href={`/thread/${id}`}>
                   <Image
                     src="/assets/reply.svg"
