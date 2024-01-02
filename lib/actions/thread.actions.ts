@@ -242,3 +242,13 @@ export async function addCommentToThread(
     throw new Error("Unable to add comment");
   }
 }
+
+export async function likeThread(
+  threadId: string,
+  userId: string,
+  path: string
+) {
+  try {
+    connectToDB();
+  } catch (error: any) {}
+}
