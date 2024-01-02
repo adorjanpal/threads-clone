@@ -1,7 +1,10 @@
+import { deleteThread } from "@/lib/actions/thread.actions";
 import { formatDateString } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React from "react";
+import DeleteThread from "../forms/DeleteThread";
 
 interface Props {
   id: string;
@@ -40,11 +43,12 @@ const ThreadCard = ({
 }: Props) => {
   return (
     <article
-      className={`flex w-full flex-col rounded-xl ${
+      className={`flex w-full flex-col rounded-xl relative ${
         isComment ? "px-0 xs:px-7" : "bg-dark-2 p-7"
       }`}
     >
-      <div className="flex items-start justify-between">
+      {author.id === currentUserId && <DeleteThread threadId={id} />}
+      <div className="flex items-start justify-between relative">
         <div className="flex w-full flex-1 flex-row gap-4">
           <div className="flex flex-col items-center">
             <Link href={`/profile/${author.id}`} className="relative h-11 w-11">
@@ -57,6 +61,7 @@ const ThreadCard = ({
             </Link>
             <div className="thread-card_bar"></div>
           </div>
+
           <div className="flex w-full flex-col">
             <Link href={`/profile/${author.id}`} className="w-fit">
               <h4 className="cursor-pointer text-base-semibold text-light-1">
