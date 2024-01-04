@@ -181,3 +181,18 @@ export async function getActivity(userId: string) {
     throw error;
   }
 }
+
+export async function fetchUserById(userId: string) {
+  try {
+    connectToDB();
+
+    const user = await User.findOne({ _id: userId }).populate({
+      path: "communities",
+      model: Community,
+    });
+
+    return user;
+  } catch (error: any) {
+    throw new Error(`Failed to fetch user: ${error.message}`);
+  }
+}

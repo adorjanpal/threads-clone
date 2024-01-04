@@ -1,4 +1,4 @@
-import { deleteThread } from "@/lib/actions/thread.actions";
+import { deleteThread, fetchThreadById } from "@/lib/actions/thread.actions";
 import { formatDateString } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
@@ -6,6 +6,10 @@ import { usePathname } from "next/navigation";
 import React from "react";
 import DeleteThread from "../forms/DeleteThread";
 import LikeThread from "../forms/LikeThread";
+import { useRouter } from "next/router";
+
+import { fetchUserById } from "@/lib/actions/user.actions";
+import LikedBy from "../forms/LikedBy";
 
 interface Props {
   id: string;
@@ -33,7 +37,7 @@ interface Props {
   numberOfLikes: number;
 }
 
-const ThreadCard = ({
+const ThreadCard = async ({
   id,
   currentUserId,
   parentId,
@@ -46,6 +50,24 @@ const ThreadCard = ({
   likedByUser,
   numberOfLikes,
 }: Props) => {
+  const thread = await fetchThreadById(id);
+  const likers = thread.liked;
+
+  let likerInfo = [];
+
+  for (let index = 0; index < likers.length; index++) {
+    let data = await fetchUserById(likers[index]);
+
+    // console.log(data);
+
+    likerInfo.push({
+      name: data.name,
+      username: data.username,
+      image: data.image,
+      id: data.id,
+    });
+  }
+
   return (
     <article
       className={`flex w-full flex-col rounded-xl relative ${
@@ -79,15 +101,14 @@ const ThreadCard = ({
             <div className={`${isComment && "mb-10"}mt-5 flex flex-col gap-3`}>
               <div className="flex gap-3.5">
                 <div className="flex gap-1 justify-center mt-0.5">
-                  <p className="text-light-2 text-small-regular m-0 mt-0.5">
-                    {numberOfLikes}
-                  </p>
+                  <LikedBy likers={likerInfo} />
                   <LikeThread
                     userId={currentUserId}
                     likedByUser={likedByUser}
                     threadId={id}
                   />
                 </div>
+                <div></div>
                 <Link href={`/thread/${id}`}>
                   <Image
                     src="/assets/reply.svg"

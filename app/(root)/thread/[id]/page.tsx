@@ -19,6 +19,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
   if (!userInfo?.onboarded) redirect("/onboarding");
 
   const thread = await fetchThreadById(params.id);
+  console.log(params.id);
 
   return (
     <section className="relative ">
@@ -33,7 +34,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
           community={thread.community}
           createdAt={thread.createdAt}
           comments={thread.children}
-          likedByUser={thread.liked.length > 0 ? true : false}
+          likedByUser={thread.liked.includes(userInfo._id) ? true : false}
           numberOfLikes={thread.liked.length}
         />
       </div>
@@ -61,11 +62,17 @@ const Page = async ({ params }: { params: { id: string } }) => {
                 createdAt={childItem.createdAt}
                 comments={childItem.children}
                 isComment
-                likedByUser={childItem.liked.length > 0 ? true : false}
+                likedByUser={
+                  childItem.liked.includes(userInfo._id) ? true : false
+                }
                 numberOfLikes={childItem.liked.length}
               />
-
-              <DeleteThread threadId={childItem._id} />
+              {(JSON.stringify(thread.author._id) ==
+                JSON.stringify(userInfo._id) ||
+                JSON.stringify(userInfo._id) ==
+                  JSON.stringify(childItem.author.id)) && (
+                <DeleteThread threadId={childItem._id} />
+              )}
             </div>
           );
         })}

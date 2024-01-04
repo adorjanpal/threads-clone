@@ -1,4 +1,4 @@
-import { fetchUserPosts } from "@/lib/actions/user.actions";
+import { fetchUser, fetchUserPosts } from "@/lib/actions/user.actions";
 import { redirect } from "next/navigation";
 import React from "react";
 import ThreadCard from "../cards/ThreadCard";
@@ -14,7 +14,7 @@ interface Props {
 
 const ThreadsTab = async ({ currentUserId, accountId, accountType }: Props) => {
   let result: any;
-
+  const userInfo = await fetchUser(currentUserId);
   if (accountType === "Community") {
     result = await fetchCommunityPosts(accountId);
   } else {
@@ -31,7 +31,7 @@ const ThreadsTab = async ({ currentUserId, accountId, accountType }: Props) => {
             <ThreadCard
               key={thread.id}
               id={thread._id}
-              currentUserId={result.id || ""}
+              currentUserId={currentUserId || ""}
               parentId={thread.parentId}
               content={thread.text}
               author={
@@ -46,7 +46,7 @@ const ThreadsTab = async ({ currentUserId, accountId, accountType }: Props) => {
               community={thread.community}
               createdAt={thread.createdAt}
               comments={thread.children}
-              likedByUser={thread.liked.length > 0 ? true : false}
+              likedByUser={thread.liked.includes(userInfo._id) ? true : false}
               numberOfLikes={thread.liked.length}
             />
             {accountId === currentUserId && (

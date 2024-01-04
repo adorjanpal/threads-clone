@@ -31,7 +31,7 @@ export default async function Home() {
                 community={post.community}
                 createdAt={post.createdAt}
                 comments={post.children}
-                likedByUser={post.liked.length > 0 ? true : false}
+                likedByUser={userInfo.likes.includes(post.id) ? true : false}
                 numberOfLikes={post.liked.length}
               />
             );

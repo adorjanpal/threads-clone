@@ -17,8 +17,10 @@ export const metadata = {
 
 export default function RootLayout({
   children,
+  modal,
 }: {
   children: React.ReactNode;
+  modal: React.ReactNode;
 }) {
   return (
     <ClerkProvider appearance={{ baseTheme: dark }}>
@@ -30,6 +32,7 @@ export default function RootLayout({
 
             <section className="main-container">
               <div className="w-full max-w-4xl">{children}</div>
+              <div className="w-full max-w-4xl">{modal}</div>
             </section>
 
             <RightSidebar />
